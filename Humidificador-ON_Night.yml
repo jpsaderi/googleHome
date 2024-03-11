@@ -1,0 +1,46 @@
+metadata:
+  name: Ligar Umidificador Noite - Quarto João # Choose a short name that summarizes important starters and actions, like “Sunset lights”.
+  description: Scripted automation # Write a detailed description that includes everything the automation does, like “At sunset, on weekdays, close blinds, turn on lights to 50%, and play the sunset playlist on certain speakers.”
+
+automations:
+  starters:
+    - type: device.state.HumiditySetting
+      state: humidityAmbientPercent
+      lessThanOrEqualTo: 30
+      device: Sensor de temperatura - Quarto do João
+      suppressFor: 40min
+
+    - type: device.state.OnOff
+      state: on
+      is: true
+      device: Luz computador - Quarto do João
+
+    - type: device.state.OnOff
+      state: on
+      is: true
+      device: Luz Quarto - Quarto do João
+
+  condition:
+    type: and
+    conditions:
+      - type: device.state.HumiditySetting
+        device: Sensor de temperatura - Quarto do João
+        state: humidityAmbientPercent
+        lessThanOrEqualTo: 30
+
+      - type: time.between
+        after: 00:00
+        before: 08:00
+        weekdays:
+          - MON
+          - TUE
+          - WED
+          - THU
+          - FRI
+          - SAT
+          - SUN
+
+  actions:
+    - type: device.command.ActivateScene
+      activate: true
+      devices: Ligar umidificador

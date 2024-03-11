@@ -1,0 +1,43 @@
+metadata:
+  name: Ligar Ar Condicionado Tarde - Quarto João # Choose a short name that summarizes important starters and actions, like “Sunset lights”.
+  description: Scripted automation # Write a detailed description that includes everything the automation does, like “At sunset, on weekdays, close blinds, turn on lights to 50%, and play the sunset playlist on certain speakers.”
+
+automations:
+  starters:
+    - type: device.state.TemperatureControl
+      device: Sensor de temperatura - Quarto do João
+      state: temperatureAmbient
+      greaterThanOrEqualTo: 30C
+      suppressFor: 40min
+
+    - type: device.state.OnOff
+      state: on
+      is: true
+      device: Luz computador - Quarto do João
+
+    - type: device.state.OnOff
+      state: on
+      is: true
+      device: Luz Quarto - Quarto do João
+
+  condition:
+    type: and
+    conditions:
+      - type: device.state.TemperatureControl
+        device: Sensor de temperatura - Quarto do João
+        state: temperatureAmbient
+        greaterThanOrEqualTo: 30C
+      - type: time.between
+        after: 13:30
+        before: 18:00
+        weekdays:
+          - MON
+          - TUE
+          - WED
+          - THU
+          - FRI
+
+  actions:
+    - type: device.command.ActivateScene
+      activate: true
+      devices: Ligar ar condicionado
